@@ -5,18 +5,28 @@
 (function () {
     'use strict';
 
+    // Signal JS is active (for any future progressive enhancement needs)
+    document.body.classList.add('js-ready');
+
     /* ── NAVBAR SCROLL BEHAVIOUR ── */
     const navbar = document.getElementById('navbar');
     const scrollTopBtn = document.getElementById('scrollTop');
 
     function onScroll() {
         const y = window.scrollY;
-        if (y > 60) {
-            navbar.classList.add('scrolled');
-            scrollTopBtn.classList.add('visible');
-        } else {
-            navbar.classList.remove('scrolled');
-            scrollTopBtn.classList.remove('visible');
+        if (navbar) {
+            if (y > 60) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+        if (scrollTopBtn) {
+            if (y > 60) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
         }
         updateActiveNavLink(y);
     }
@@ -129,6 +139,35 @@
         '.animate-fade-up, .animate-slide-left, .animate-slide-right, .industry-card'
     );
 
+    // Initialize: set initial hidden state ONLY for elements below the viewport
+    function initAnimations() {
+        animatedEls.forEach(el => {
+            // Skip elements inside inactive tabs
+            const parentTab = el.closest('.tab-content');
+            if (parentTab && !parentTab.classList.contains('active')) return;
+
+            const rect = el.getBoundingClientRect();
+            const isInView = rect.top < window.innerHeight + 100 && rect.bottom > 0;
+
+            if (isInView) {
+                // Already visible — mark as visible immediately with no animation
+                el.classList.add('visible');
+            } else {
+                // Below viewport — set initial hidden state via inline style
+                if (el.classList.contains('animate-fade-up') || el.classList.contains('industry-card')) {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(30px)';
+                } else if (el.classList.contains('animate-slide-left')) {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateX(-40px)';
+                } else if (el.classList.contains('animate-slide-right')) {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateX(40px)';
+                }
+            }
+        });
+    }
+
     function revealElement(el) {
         if (el.classList.contains('visible')) return true;
         // Skip elements inside inactive tabs (they'll be revealed when tab activates)
@@ -137,25 +176,32 @@
 
         const delay = el.dataset.delay || el.style.getPropertyValue('--delay') || '0s';
         el.style.transitionDelay = delay;
+        // Clear the inline hidden styles — CSS .visible class will take over
+        el.style.opacity = '';
+        el.style.transform = '';
         el.classList.add('visible');
         return true;
     }
 
-    // Check which elements are already in the viewport
+    // Check which elements are in the viewport
     function revealInViewport() {
         animatedEls.forEach(el => {
             if (el.classList.contains('visible')) return;
             const parentTab = el.closest('.tab-content');
             if (parentTab && !parentTab.classList.contains('active')) return;
             const rect = el.getBoundingClientRect();
-            if (rect.top < window.innerHeight + 50 && rect.bottom > -50) {
+            if (rect.top < window.innerHeight + 100 && rect.bottom > -100) {
                 revealElement(el);
             }
         });
     }
 
+    // Initialize hidden states first
+    initAnimations();
+
+    // Set up IntersectionObserver
     if ('IntersectionObserver' in window) {
-        const observerOptions = { threshold: 0.01, rootMargin: '50px 0px 0px 0px' };
+        const observerOptions = { threshold: 0.01, rootMargin: '0px 0px 200px 0px' };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -165,11 +211,10 @@
             });
         }, observerOptions);
 
-        animatedEls.forEach(el => observer.observe(el));
+        animatedEls.forEach(el => {
+            if (!el.classList.contains('visible')) observer.observe(el);
+        });
     }
-
-    // Immediately reveal elements already in viewport on load
-    revealInViewport();
 
     // Also check on scroll for any elements the observer might miss
     let scrollTicking = false;
@@ -183,42 +228,45 @@
         }
     }, { passive: true });
 
-    // Ultimate fallback: make ALL elements visible after 2 seconds
+    // Ultimate fallback: make ALL non-tab elements visible after 1200ms
     setTimeout(() => {
         animatedEls.forEach(el => {
             const parentTab = el.closest('.tab-content');
             if (parentTab && !parentTab.classList.contains('active')) return;
             if (!el.classList.contains('visible')) {
                 el.style.transitionDelay = '0s';
+                el.style.opacity = '';
+                el.style.transform = '';
                 el.classList.add('visible');
             }
         });
-    }, 2000);
+    }, 1200);
 
     /* ── HERO INTRO ANIMATION ── */
     const heroContent = document.querySelector('.hero-content');
     const heroLottie = document.querySelector('.hero-lottie-wrap');
 
-    if (heroContent) {
-        heroContent.style.opacity = '0';
-        heroContent.style.transform = 'translateY(30px)';
+    function animateHeroEl(el, delay) {
+        if (!el) return;
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'none';
         setTimeout(() => {
-            heroContent.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
-            heroContent.style.opacity = '1';
-            heroContent.style.transform = 'translateY(0)';
-            heroContent.classList.add('visible');
-        }, 200);
+            el.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+            el.classList.add('visible');
+        }, delay);
     }
-    if (heroLottie) {
-        heroLottie.style.opacity = '0';
-        heroLottie.style.transform = 'translateY(30px)';
-        setTimeout(() => {
-            heroLottie.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
-            heroLottie.style.opacity = '1';
-            heroLottie.style.transform = 'translateY(0)';
-            heroLottie.classList.add('visible');
-        }, 500);
-    }
+
+    animateHeroEl(heroContent, 200);
+    animateHeroEl(heroLottie, 500);
+
+    // Ensure hero elements are always visible after 1.5s regardless
+    setTimeout(() => {
+        if (heroContent) { heroContent.style.opacity = '1'; heroContent.style.transform = 'translateY(0)'; heroContent.classList.add('visible'); }
+        if (heroLottie) { heroLottie.style.opacity = '1'; heroLottie.style.transform = 'translateY(0)'; heroLottie.classList.add('visible'); }
+    }, 1500);
 
     /* ── COUNTER ANIMATION ── */
     const counters = document.querySelectorAll('[data-target]');
