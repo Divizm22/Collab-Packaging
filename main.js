@@ -264,6 +264,14 @@
 
     function animateHeroEl(el, delay) {
         if (!el) return;
+        // On mobile (<= 768px), skip the translate-in animation — CSS already
+        // guarantees visibility and JS timing is unreliable during first paint.
+        if (window.innerWidth <= 768) {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+            el.classList.add('visible');
+            return;
+        }
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
         el.style.transition = 'none';
@@ -278,11 +286,11 @@
     animateHeroEl(heroContent, 200);
     animateHeroEl(heroLottie, 500);
 
-    // Ensure hero elements are always visible after 1.5s regardless
+    // Ensure hero elements are always visible after 800ms regardless
     setTimeout(() => {
         if (heroContent) { heroContent.style.opacity = '1'; heroContent.style.transform = 'translateY(0)'; heroContent.classList.add('visible'); }
-        if (heroLottie) { heroLottie.style.opacity = '1'; heroLottie.style.transform = 'translateY(0)'; heroLottie.classList.add('visible'); }
-    }, 1500);
+        if (heroLottie)  { heroLottie.style.opacity  = '1'; heroLottie.style.transform  = 'translateY(0)'; heroLottie.classList.add('visible'); }
+    }, 800);
 
     /* ── HERO CARD SWITCHER (alternates every 4 seconds with smooth crossfade) ── */
     (function () {
@@ -394,29 +402,6 @@
         }
     }
 
-    /* ── GALLERY IMAGE UPLOAD ── */
-    window.handleGalleryUpload = function (input, galleryId) {
-        if (!input.files || !input.files[0]) return;
-        const file = input.files[0];
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const container = document.getElementById(galleryId);
-            if (!container) return;
-            container.innerHTML = `
-                <div class="gallery-placeholder-content" style="height:100%;position:relative;">
-                    <img src="${e.target.result}" alt="Factory Image" style="width:100%;height:100%;object-fit:cover;" />
-                    <div class="gallery-caption">${sanitize(file.name.replace(/\.[^.]+$/, ''))}</div>
-                </div>
-            `;
-        };
-        reader.readAsDataURL(file);
-    };
-
-    function sanitize(str) {
-        const div = document.createElement('div');
-        div.appendChild(document.createTextNode(str));
-        return div.innerHTML;
-    }
 
     /* ── CONTACT FORM VALIDATION & SUBMISSION ── */
     const form = document.getElementById('inquiryForm');
