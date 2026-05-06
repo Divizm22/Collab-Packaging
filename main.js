@@ -409,18 +409,46 @@
     const formSuccess = document.getElementById('formSuccess');
 
     if (form) {
-        form.addEventListener('submit', function (e) {
+        form.addEventListener('submit', async function (e) {
             e.preventDefault();
             if (!validateForm()) return;
 
-            // Simulate submission
+            // Sync email field into _replyto so Formspree uses it as reply-to
+            const emailInput   = document.getElementById('email');
+            const replyToField = document.getElementById('_replyto');
+            if (emailInput && replyToField) replyToField.value = emailInput.value;
+
+            // Show loading state
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-            setTimeout(() => {
-                form.querySelector('.form-actions').style.display = 'none';
-                formSuccess.classList.remove('hidden');
-                form.reset();
-            }, 1400);
+
+            try {
+                const response = await fetch('https://formspree.io/f/xrejlepp', {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    // ✅ Success — show thank-you message
+                    form.querySelector('.form-actions').style.display = 'none';
+                    formSuccess.classList.remove('hidden');
+                    form.reset();
+                } else {
+                    // ❌ Server rejected — show inline error
+                    const data = await response.json();
+                    const msg = (data.errors || []).map(e => e.message).join(', ')
+                                || 'Submission failed. Please try again.';
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Inquiry';
+                    alert('⚠️ ' + msg);
+                }
+            } catch (err) {
+                // ❌ Network error
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Inquiry';
+                alert('⚠️ Network error. Please check your connection and try again.');
+            }
         });
 
         // Real-time validation
