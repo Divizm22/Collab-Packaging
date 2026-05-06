@@ -304,51 +304,6 @@ h5 {
     opacity: 1;
 }
 
-/* ── COMPARISON TABLE ── */
-.boxes-compare {
-    margin-top: 60px;
-    background: var(--white);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    padding: 32px;
-    border: 1px solid var(--grey-200);
-}
-
-.compare-title {
-    font-size: 1.25rem;
-    color: var(--grey-900);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.compare-table-wrap {
-    overflow-x: auto;
-}
-
-.compare-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 700px;
-}
-
-.compare-table th,
-.compare-table td {
-    padding: 16px;
-    text-align: left;
-    border-bottom: 1px solid var(--grey-200);
-}
-
-.compare-table th {
-    font-weight: 600;
-    color: var(--grey-800);
-    background: var(--grey-50);
-}
-
-.compare-table tr:last-child td {
-    border-bottom: none;
-}
 
 /* ── ANIMATIONS ── */
 /* Base transition for smooth reveal — no opacity:0 here (JS controls initial state) */
@@ -714,19 +669,19 @@ h5 {
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, .15);
     border-radius: var(--radius-lg);
-    padding: 20px 32px;
-    flex-wrap: wrap;
-    gap: 0;
+    padding: 16px 20px;
+    flex-wrap: nowrap;   /* All 4 stats stay on one line */
 }
 
 .stat {
     text-align: center;
-    padding: 8px 28px;
+    padding: 6px 16px;   /* Tighter horizontal padding so all 4 fit in one row */
+    flex-shrink: 0;
 }
 
 .stat-num {
     font-family: 'Outfit', sans-serif;
-    font-size: 2.2rem;
+    font-size: 1.9rem;   /* Slightly reduced so 4 stats comfortably fit on one line */
     font-weight: 900;
     color: white;
     line-height: 1;
@@ -783,15 +738,16 @@ h5 {
 /* ── Hero stats — left aligned in two-column layout ── */
 .hero-inner .hero-stats {
     justify-content: flex-start;
-    padding: 16px 20px;
+    padding: 14px 16px;
     background: rgba(255, 255, 255, .08);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, .15);
     border-radius: var(--radius-lg);
-    flex-wrap: wrap;
+    flex-wrap: nowrap;   /* Single row */
     gap: 0;
     display: flex;
     align-items: center;
+    overflow: hidden;    /* Prevent bleed on small container */
 }
 
 .hero-inner .hero-actions {
@@ -2406,70 +2362,6 @@ h5 {
     gap: 8px;
 }
 
-/* Comparison table */
-.boxes-compare {
-    background: var(--grey-50);
-    border-radius: var(--radius-lg);
-    padding: 28px;
-    border: 1px solid var(--grey-200);
-}
-
-.compare-title {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--grey-800);
-}
-
-.compare-title i {
-    color: var(--blue-600);
-}
-
-.compare-table-wrap {
-    overflow-x: auto;
-}
-
-.compare-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85rem;
-}
-
-.compare-table th {
-    background: var(--grey-900);
-    color: white;
-    padding: 12px 18px;
-    text-align: left;
-    font-weight: 700;
-    font-size: 0.8rem;
-}
-
-.compare-table th i {
-    margin-right: 6px;
-    color: var(--blue-400);
-}
-
-.compare-table td {
-    padding: 11px 18px;
-    border-bottom: 1px solid var(--grey-200);
-    color: var(--grey-700);
-}
-
-.compare-table tr:last-child td {
-    border-bottom: none;
-}
-
-.compare-table tr:nth-child(even) td {
-    background: var(--grey-50);
-}
-
-.compare-table td:first-child {
-    font-weight: 600;
-    color: var(--grey-900);
-}
 
 /* ============================================================
    PRODUCTS — LABELS TAB STYLES
@@ -2863,7 +2755,8 @@ h5 {
 
     .hero-inner .hero-stats {
         justify-content: center;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;   /* Keep all 4 on one row on tablet too */
+        padding: 12px 12px;
     }
 
     .hero-lottie-wrap {
@@ -2931,16 +2824,16 @@ h5 {
 
     .hero-inner .hero-stats {
         justify-content: center;
-        padding: 14px 12px;
-        flex-wrap: wrap;
+        padding: 12px 8px;
+        flex-wrap: nowrap;   /* Still one row on mobile */
     }
 
     .stat {
-        padding: 8px 12px;
+        padding: 6px 10px;
     }
 
     .stat-num {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
     }
 
     .stat-divider {
@@ -3085,26 +2978,27 @@ h5 {
 /* ── Small Mobile (≤600px) ── */
 @media (max-width: 600px) {
 
-    /* Hero stats: wrap neatly 2×2 */
+    /* Hero stats: all 4 on one row with compact sizing */
     .hero-stats {
-        flex-wrap: wrap;
-        padding: 14px 10px;
+        flex-wrap: nowrap;
+        padding: 10px 6px;
         gap: 0;
     }
 
     .stat {
-        flex: 1 0 45%;
-        padding: 10px 8px;
-        min-width: 100px;
+        flex: 1;
+        padding: 6px 4px;
+        min-width: 0;
     }
 
     .stat-num {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
     }
 
-    /* Keep vertical dividers for desktop hidden on small; show horizontal spacer via wrapping */
+    /* Dividers still visible on one row */
     .stat-divider {
-        display: none;
+        height: 30px;
+        display: block;
     }
 
     /* Trust bar: center on tiny screens */
@@ -3164,15 +3058,6 @@ h5 {
         gap: 10px;
     }
 
-    /* Compare table: ensure horizontal scroll is accessible */
-    .boxes-compare {
-        padding: 20px 16px;
-    }
-
-    .compare-table-wrap {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
 
     /* Flexo section hero */
     .flexo-hero {
@@ -3284,20 +3169,23 @@ h5 {
         padding: 6px 14px;
     }
 
-    /* Stats: fully stacked */
+    /* Stats: 2×2 grid on very small screens (4-in-a-row is too tight below 480px) */
     .hero-stats {
-        flex-direction: column;
+        flex-wrap: wrap;
+        flex-direction: row;
         align-items: center;
+        padding: 8px 4px;
     }
 
     .stat {
-        width: 100%;
-        padding: 10px 12px;
+        flex: 1 0 45%;
+        width: auto;
+        padding: 8px 4px;
         text-align: center;
     }
 
     .stat-num {
-        font-size: 1.8rem;
+        font-size: 1.4rem;
     }
 
     .stat-divider {
@@ -3501,10 +3389,6 @@ h5 {
         font-size: 0.88rem;
     }
 
-    /* Comparison table */
-    .boxes-compare {
-        padding: 16px 12px;
-    }
 
     /* Mobile menu */
     .mobile-link {
