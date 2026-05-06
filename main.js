@@ -12,6 +12,21 @@
     const navbar = document.getElementById('navbar');
     const scrollTopBtn = document.getElementById('scrollTop');
 
+    /* ── ACTIVE NAV LINK ── */
+    const sections = ['home', 'about', 'products', 'manufacturing', 'industries', 'quality', 'contact'];
+
+    function updateActiveNavLink(scrollY) {
+        let current = 'home';
+        for (const id of sections) {
+            const el = document.getElementById(id);
+            if (el && el.offsetTop - 100 <= scrollY) current = id;
+        }
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
+        });
+    }
+
     function onScroll() {
         const y = window.scrollY;
         if (navbar) {
@@ -36,21 +51,6 @@
     /* ── SCROLL TO TOP ── */
     if (scrollTopBtn) {
         scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-    }
-
-    /* ── ACTIVE NAV LINK ── */
-    const sections = ['home', 'about', 'products', 'manufacturing', 'industries', 'quality', 'contact'];
-
-    function updateActiveNavLink(scrollY) {
-        let current = 'home';
-        for (const id of sections) {
-            const el = document.getElementById(id);
-            if (el && el.offsetTop - 100 <= scrollY) current = id;
-        }
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
-        });
     }
 
     /* ── SMOOTH SCROLL FOR ALL ANCHOR LINKS ── */
@@ -95,44 +95,60 @@
     });
 
     /* ── PRODUCT TABS ── */
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
+    (function () {
+        var btnLabels   = document.getElementById('tab-labels');
+        var btnBoxes    = document.getElementById('tab-boxes');
+        var panelLabels = document.getElementById('content-labels');
+        var panelBoxes  = document.getElementById('content-boxes');
 
-    function revealTabContent(contentEl) {
-        if (!contentEl) return;
-        // Make all animated elements inside this tab visible with staggered delays
-        const animEls = contentEl.querySelectorAll('.animate-fade-up, .animate-slide-left, .animate-slide-right');
-        animEls.forEach((el, i) => {
-            el.classList.remove('visible');
-            void el.offsetWidth; // force reflow
-            setTimeout(() => {
-                el.style.transitionDelay = `${i * 0.08}s`;
-                el.classList.add('visible');
-            }, 50);
-        });
-    }
+        if (!btnLabels || !btnBoxes || !panelLabels || !panelBoxes) return;
 
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const target = btn.dataset.tab;
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            btn.classList.add('active');
-            const content = document.getElementById(`content-${target}`);
-            if (content) {
-                content.classList.add('active');
-                revealTabContent(content);
+        function forceReveal(panel) {
+            panel.querySelectorAll('.animate-fade-up, .animate-slide-left, .animate-slide-right').forEach(function (el, i) {
+                el.style.opacity = '';
+                el.style.transform = '';
+                el.style.transitionDelay = '';
+                el.classList.remove('visible');
+                requestAnimationFrame(function () {
+                    el.style.transitionDelay = (i * 0.06) + 's';
+                    el.classList.add('visible');
+                });
+            });
+        }
+
+        function showTab(tabName) {
+            var show, hide, activateBtn, deactivateBtn;
+            if (tabName === 'labels') {
+                show = panelLabels; hide = panelBoxes;
+                activateBtn = btnLabels; deactivateBtn = btnBoxes;
+            } else {
+                show = panelBoxes; hide = panelLabels;
+                activateBtn = btnBoxes; deactivateBtn = btnLabels;
             }
-        });
-    });
+            deactivateBtn.classList.remove('active');
+            activateBtn.classList.add('active');
+            hide.classList.remove('active');
+            show.classList.add('active');
+            forceReveal(show);
+        }
 
-    // Reveal the initially active tab content
-    const activeTab = document.querySelector('.tab-content.active');
-    if (activeTab) {
-        activeTab.querySelectorAll('.animate-fade-up, .animate-slide-left, .animate-slide-right').forEach(el => {
+        // Expose globally — inline onclick="window.switchProductTab('labels')" calls this directly
+        window.switchProductTab = showTab;
+
+        // Also attach via addEventListener as backup
+        btnLabels.addEventListener('click', function () { showTab('labels'); });
+        btnBoxes.addEventListener('click', function () { showTab('boxes'); });
+
+        // Init: reveal the default active panel
+        var initPanel = panelLabels.classList.contains('active') ? panelLabels : panelBoxes;
+        initPanel.querySelectorAll('.animate-fade-up, .animate-slide-left, .animate-slide-right').forEach(function (el) {
+            el.style.opacity = '';
+            el.style.transform = '';
             el.classList.add('visible');
         });
-    }
+    }());
+
+
 
     /* ── SCROLL ANIMATIONS (IntersectionObserver + fallback) ── */
     const animatedEls = document.querySelectorAll(
@@ -267,6 +283,67 @@
         if (heroContent) { heroContent.style.opacity = '1'; heroContent.style.transform = 'translateY(0)'; heroContent.classList.add('visible'); }
         if (heroLottie) { heroLottie.style.opacity = '1'; heroLottie.style.transform = 'translateY(0)'; heroLottie.classList.add('visible'); }
     }, 1500);
+
+    /* ── HERO CARD SWITCHER (alternates every 4 seconds with smooth crossfade) ── */
+    (function () {
+        var cards = document.querySelectorAll('.hcs-card');
+        var dots  = document.querySelectorAll('.hcs-dot');
+        if (!cards.length) return;
+
+        var currentIdx = 0;
+        var isAnimating = false;
+        var switchTimer = null;
+
+        function showCard(nextIdx) {
+            if (isAnimating || nextIdx === currentIdx) return;
+            isAnimating = true;
+
+            var outCard  = cards[currentIdx];
+            var inCard   = cards[nextIdx];
+            var outDot   = dots[currentIdx];
+            var inDot    = dots[nextIdx];
+
+            // 1. Mark outgoing card as exiting
+            outCard.classList.remove('hcs-active');
+            outCard.classList.add('hcs-exit');
+            if (outDot) outDot.classList.remove('hcs-dot--active');
+
+            // 2. After outgoing card has started fading, bring in the new card
+            setTimeout(function () {
+                outCard.classList.remove('hcs-exit');
+                inCard.classList.add('hcs-active');
+                if (inDot) inDot.classList.add('hcs-dot--active');
+                currentIdx = nextIdx;
+
+                // Release animation lock after transition completes
+                setTimeout(function () { isAnimating = false; }, 600);
+            }, 250);
+        }
+
+        function next() {
+            showCard((currentIdx + 1) % cards.length);
+        }
+
+        function startTimer() {
+            clearInterval(switchTimer);
+            switchTimer = setInterval(next, 4000);
+        }
+
+        // Dot clicks allow manual switching
+        dots.forEach(function (dot, i) {
+            dot.addEventListener('click', function () {
+                if (i !== currentIdx) {
+                    showCard(i);
+                    startTimer();
+                }
+            });
+        });
+
+        // Start auto-switch after page load settles
+        setTimeout(startTimer, 1500);
+    })();
+
+
 
     /* ── COUNTER ANIMATION ── */
     const counters = document.querySelectorAll('[data-target]');

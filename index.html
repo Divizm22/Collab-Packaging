@@ -14,7 +14,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;600;700;800&display=swap"
         rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=5" />
+    <link rel="stylesheet" href="styles.css?v=8" />
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <!-- DotLottie Web Component -->
@@ -127,20 +127,48 @@
                 </div>
             </div>
 
-            <!-- Right: Lottie Animation Card -->
+            <!-- Right: Alternating Animation Cards -->
             <div class="hero-lottie-wrap delay-2">
-                <div class="hero-lottie-card">
-                    <div class="hlc-badge">
-                        <i class="fas fa-box"></i>
-                        <span>Premium Corrugated Boxes</span>
+                <div class="hero-card-switcher" id="heroCardSwitcher">
+
+                    <!-- Card 1: Flexo Label Printing (shown first) -->
+                    <div class="hero-lottie-card hcs-card hcs-active" id="heroCard1">
+                        <div class="hlc-badge hlc-badge--label">
+                            <i class="fas fa-tags"></i>
+                            <span>Flexo Label Printing</span>
+                        </div>
+                        <dotlottie-wc id="lottieLabel" src="assets/flexo_label_printing.json"
+                            background="transparent" speed="1"
+                            style="width:100%; height:300px;" loop autoplay>
+                        </dotlottie-wc>
+                        <div class="hlc-footer">
+                            <span><i class="fas fa-check-circle"></i> HD Precision Print</span>
+                            <span><i class="fas fa-check-circle"></i> All Label Types</span>
+                            <span><i class="fas fa-check-circle"></i> Bulk Ready</span>
+                        </div>
                     </div>
-                    <dotlottie-wc src="assets/package_opening.lottie" background="transparent" speed="1"
-                        style="width:100%; height:300px;" loop autoplay>
-                    </dotlottie-wc>
-                    <div class="hlc-footer">
-                        <span><i class="fas fa-check-circle"></i> Custom Sizes</span>
-                        <span><i class="fas fa-check-circle"></i> Bulk Orders</span>
-                        <span><i class="fas fa-check-circle"></i> Fast Delivery</span>
+
+                    <!-- Card 2: Premium Corrugated Boxes -->
+                    <div class="hero-lottie-card hcs-card" id="heroCard2">
+                        <div class="hlc-badge">
+                            <i class="fas fa-box"></i>
+                            <span>Premium Corrugated Boxes</span>
+                        </div>
+                        <dotlottie-wc id="lottieBox" src="assets/package_opening.lottie"
+                            background="transparent" speed="1"
+                            style="width:100%; height:300px;" loop autoplay>
+                        </dotlottie-wc>
+                        <div class="hlc-footer">
+                            <span><i class="fas fa-check-circle"></i> Custom Sizes</span>
+                            <span><i class="fas fa-check-circle"></i> Bulk Orders</span>
+                            <span><i class="fas fa-check-circle"></i> Fast Delivery</span>
+                        </div>
+                    </div>
+
+                    <!-- Switcher dots -->
+                    <div class="hcs-dots">
+                        <span class="hcs-dot hcs-dot--active" data-card="0"></span>
+                        <span class="hcs-dot" data-card="1"></span>
                     </div>
                 </div>
             </div>
@@ -260,18 +288,18 @@
 
             <!-- Tab Navigation -->
             <div class="product-tabs">
-                <button class="tab-btn active" data-tab="boxes" id="tab-boxes">
-                    <i class="fas fa-box"></i> Corrugated Boxes
-                </button>
-                <button class="tab-btn" data-tab="labels" id="tab-labels">
+                <button class="tab-btn active" data-tab="labels" id="tab-labels" onclick="window.switchProductTab('labels')">
                     <i class="fas fa-tags"></i> Printed Labels
+                </button>
+                <button class="tab-btn" data-tab="boxes" id="tab-boxes" onclick="window.switchProductTab('boxes')">
+                    <i class="fas fa-box"></i> Corrugated Boxes
                 </button>
             </div>
 
             <!-- ═══════════════════════════════════════════════════
              BOXES TAB — Industrial warm-brown feel
              ═══════════════════════════════════════════════════ -->
-            <div class="tab-content active" id="content-boxes">
+            <div class="tab-content" id="content-boxes">
 
                 <!-- Hero feature banner -->
                 <div class="boxes-hero animate-fade-up">
@@ -408,177 +436,223 @@
             </div>
 
             <!-- ═══════════════════════════════════════════════════
-             LABELS TAB — Colorful, modern, multi-industry
+             LABELS TAB — Flexo Printing Machine Service
              ═══════════════════════════════════════════════════ -->
-            <div class="tab-content" id="content-labels">
+            <div class="tab-content active" id="content-labels">
 
-                <!-- Intro strip -->
-                <div class="labels-intro animate-fade-up">
-                    <div class="li-left">
-                        <div class="section-tag" style="margin-bottom:10px">4 Industry Verticals</div>
-                        <h3>Precision Printed Labels for Every Industry</h3>
-                        <p>From regulatory pharmaceutical labels to vibrant beverage labels — we handle the full
-                            spectrum with digital, offset, and flexographic printing.</p>
+                <!-- Hero Banner: Flexo Machine Intro -->
+                <div class="flexo-hero animate-fade-up">
+                    <div class="flexo-hero-left">
+                        <div class="flexo-badge"><i class="fas fa-certificate"></i> State-of-the-Art Technology</div>
+                        <h3>Precision Label Printing<br /><span class="flexo-highlight">Powered by Flexo Machine</span></h3>
+                        <p>Our advanced Flexographic Printing Machine delivers razor-sharp, vibrant labels at industrial scale — perfect for Pharma, Beverages, FMCG, and Healthcare industries across India.</p>
+                        <div class="flexo-hero-stats">
+                            <div class="fhs">
+                                <span class="fhs-num">100M+</span>
+                                <span class="fhs-label">Labels/Year</span>
+                            </div>
+                            <div class="fhs-div"></div>
+                            <div class="fhs">
+                                <span class="fhs-num">6</span>
+                                <span class="fhs-label">Color Stations</span>
+                            </div>
+                            <div class="fhs-div"></div>
+                            <div class="fhs">
+                                <span class="fhs-num">72hr</span>
+                                <span class="fhs-label">Fast Turnaround</span>
+                            </div>
+                            <div class="fhs-div"></div>
+                            <div class="fhs">
+                                <span class="fhs-num">4</span>
+                                <span class="fhs-label">Industries</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="li-right">
-                        <div class="li-stat"><span>100M+</span><small>Labels Printed/Year</small></div>
-                        <div class="li-stat"><span>4</span><small>Print Technologies</small></div>
-                        <div class="li-stat"><span>72hr</span><small>Fast Turnaround</small></div>
+                    <div class="flexo-hero-right">
+                        <div class="flexo-machine-visual">
+                            <div class="fmv-glow"></div>
+                            <div class="fmv-core">
+                                <i class="fas fa-cogs fmv-icon"></i>
+                                <div class="fmv-label-roll">
+                                    <div class="flr-strip" style="background: linear-gradient(90deg, #1d4ed8, #7c3aed, #db2777, #f97316, #059669, #1d4ed8); background-size:300% 100%; animation: rollColors 3s linear infinite;"></div>
+                                    <span>Flexo Print Roll — HD Multi-Color</span>
+                                </div>
+                            </div>
+                            <div class="fmv-sparks">
+                                <span class="spark s1"></span>
+                                <span class="spark s2"></span>
+                                <span class="spark s3"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 4 Label industry cards in a 2x2 grid -->
-                <div class="labels-grid animate-fade-up delay-1">
-
-                    <!-- Pharma -->
-                    <div class="label-industry-card pharma-card">
-                        <div class="lic-top">
-                            <div class="lic-mockup pharma-mock">
-                                <div class="lm-strip"></div>
-                                <div class="lm-brand">PHARMA CO.</div>
-                                <div class="lm-product">Paracetamol 650mg</div>
-                                <div class="lm-row"><span>Batch: PH-2401</span><span>Mfg: Jan'24</span></div>
-                                <div class="lm-row"><span>Exp: Dec'26</span><span>MRP: ₹28</span></div>
-                                <div class="lm-barcode">||||||||| |||||||</div>
-                                <div class="lm-rx">Rx Only</div>
-                            </div>
-                            <div class="lic-header-info">
-                                <div class="lic-icon pharma-icon"><i class="fas fa-pills"></i></div>
-                                <h4>Pharma Labels</h4>
-                                <p>Regulatory-grade labels for medicines, supplements &amp; diagnostic kits</p>
-                            </div>
-                        </div>
-                        <div class="lic-features">
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>FDA &amp; CDSCO
-                                    Compliant</span></div>
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>Tamper-Evident Options</span>
-                            </div>
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>QR &amp; Barcode
-                                    Printing</span></div>
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>UV &amp; Heat Resistant
-                                    Ink</span></div>
-                        </div>
-                        <a href="#contact" class="lic-cta pharma-cta"><i class="fas fa-file-alt"></i> Get Pharma Label
-                            Quote</a>
+                <!-- Label Types We Print -->
+                <div class="flexo-label-types animate-fade-up delay-1">
+                    <div class="flt-header">
+                        <h4><i class="fas fa-tags"></i> Label Types We Print</h4>
+                        <p>One machine. Endless label possibilities for every industry need.</p>
                     </div>
+                    <div class="flt-grid">
 
-                    <!-- Beverage -->
-                    <div class="label-industry-card beverage-card">
-                        <div class="lic-top">
-                            <div class="lic-mockup beverage-mock">
-                                <div class="lm-strip bev-strip"></div>
-                                <div class="lm-brand" style="color:#065f46">REFRESH CO.</div>
-                                <div class="lm-product" style="font-size:1rem; color:#047857">Mango Splash</div>
-                                <div class="lm-row"><span style="color:#065f46">250 ml</span><span
-                                        style="color:#065f46">Real Fruit</span></div>
-                                <div class="lm-row"><span style="color:#6b7280">No Preservatives</span><span
-                                        style="color:#6b7280">Sugar Free</span></div>
-                                <div class="lm-barcode" style="color:#065f46">||||||||| |||||||</div>
-                                <div class="lm-rx" style="background:#059669; color:white">FSSAI ✓</div>
-                            </div>
-                            <div class="lic-header-info">
-                                <div class="lic-icon beverage-icon"><i class="fas fa-wine-bottle"></i></div>
-                                <h4>Beverage Labels</h4>
-                                <p>Waterproof, vibrant labels for juices, water, soft drinks &amp; alcoholic beverages
-                                </p>
-                            </div>
+                        <div class="flt-card" style="--flt-accent: #1d4ed8;">
+                            <div class="flt-icon"><i class="fas fa-pills"></i></div>
+                            <h5>Pharma Labels</h5>
+                            <p>FDA &amp; CDSCO compliant, tamper-evident, barcode &amp; QR-ready labels for medicines and supplements.</p>
+                            <ul class="flt-list">
+                                <li><i class="fas fa-check"></i> Regulatory compliant inks</li>
+                                <li><i class="fas fa-check"></i> Batch &amp; expiry printing</li>
+                                <li><i class="fas fa-check"></i> UV-resistant finish</li>
+                            </ul>
                         </div>
-                        <div class="lic-features">
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>100% Waterproof
-                                    Adhesive</span></div>
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>FSSAI &amp; Food-Safe
-                                    Inks</span></div>
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>Glossy / Matte Finish</span>
-                            </div>
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>Shrink Sleeve
-                                    Available</span></div>
+
+                        <div class="flt-card" style="--flt-accent: #059669;">
+                            <div class="flt-icon"><i class="fas fa-wine-bottle"></i></div>
+                            <h5>Beverage Labels</h5>
+                            <p>Waterproof, full-color labels for juices, water, soft drinks &amp; alcoholic beverages with FSSAI-safe inks.</p>
+                            <ul class="flt-list">
+                                <li><i class="fas fa-check"></i> 100% waterproof adhesive</li>
+                                <li><i class="fas fa-check"></i> Glossy / matte finish</li>
+                                <li><i class="fas fa-check"></i> Shrink sleeve option</li>
+                            </ul>
                         </div>
-                        <a href="#contact" class="lic-cta beverage-cta"><i class="fas fa-file-alt"></i> Get Beverage
-                            Label Quote</a>
+
+                        <div class="flt-card" style="--flt-accent: #db2777;">
+                            <div class="flt-icon"><i class="fas fa-heartbeat"></i></div>
+                            <h5>Healthcare Labels</h5>
+                            <p>Sterile-safe, chemical-resistant labels for medical devices, surgical kits &amp; wellness products.</p>
+                            <ul class="flt-list">
+                                <li><i class="fas fa-check"></i> Autoclave-safe material</li>
+                                <li><i class="fas fa-check"></i> CE &amp; ISO 13485 support</li>
+                                <li><i class="fas fa-check"></i> Ultra-legible typography</li>
+                            </ul>
+                        </div>
+
+                        <div class="flt-card" style="--flt-accent: #f97316;">
+                            <div class="flt-icon"><i class="fas fa-shopping-basket"></i></div>
+                            <h5>FMCG Labels</h5>
+                            <p>Bold, vibrant labels for detergents, personal care, food products &amp; consumer goods at high volume.</p>
+                            <ul class="flt-list">
+                                <li><i class="fas fa-check"></i> Vibrant CMYK / Pantone</li>
+                                <li><i class="fas fa-check"></i> Scratch &amp; smudge proof</li>
+                                <li><i class="fas fa-check"></i> Roll or sheet format</li>
+                            </ul>
+                        </div>
+
+                        <div class="flt-card" style="--flt-accent: #7c3aed;">
+                            <div class="flt-icon"><i class="fas fa-leaf"></i></div>
+                            <h5>Agriculture Labels</h5>
+                            <p>Weather-resistant, sun-proof labels for pesticides, fertilizers, seeds &amp; agri-products.</p>
+                            <ul class="flt-list">
+                                <li><i class="fas fa-check"></i> UV &amp; moisture resistant</li>
+                                <li><i class="fas fa-check"></i> Outdoor durable inks</li>
+                                <li><i class="fas fa-check"></i> Large format available</li>
+                            </ul>
+                        </div>
+
+                        <div class="flt-card" style="--flt-accent: #0891b2;">
+                            <div class="flt-icon"><i class="fas fa-industry"></i></div>
+                            <h5>Industrial Labels</h5>
+                            <p>Heavy-duty labels for logistics, warehousing, machinery &amp; industrial product identification.</p>
+                            <ul class="flt-list">
+                                <li><i class="fas fa-check"></i> Heat &amp; chemical resistant</li>
+                                <li><i class="fas fa-check"></i> High-adhesion grades</li>
+                                <li><i class="fas fa-check"></i> Serial &amp; asset tagging</li>
+                            </ul>
+                        </div>
+
                     </div>
-
-                    <!-- Healthcare -->
-                    <div class="label-industry-card healthcare-card">
-                        <div class="lic-top">
-                            <div class="lic-mockup healthcare-mock">
-                                <div class="lm-strip hc-strip"></div>
-                                <div class="lm-brand" style="color:#9d174d">MediCare Ltd.</div>
-                                <div class="lm-product" style="color:#be185d">Surgical Gloves</div>
-                                <div class="lm-row"><span style="color:#9d174d">Size: Medium</span><span
-                                        style="color:#9d174d">Sterile</span></div>
-                                <div class="lm-row"><span style="color:#6b7280">CE Mark</span><span
-                                        style="color:#6b7280">ISO 13485</span></div>
-                                <div class="lm-barcode" style="color:#9d174d">||||||||| |||||||</div>
-                                <div class="lm-rx" style="background:#db2777; color:white">Medical ✓</div>
-                            </div>
-                            <div class="lic-header-info">
-                                <div class="lic-icon healthcare-icon"><i class="fas fa-heartbeat"></i></div>
-                                <h4>Healthcare Labels</h4>
-                                <p>Sterile-compatible labels for medical devices, surgical kits &amp; wellness products
-                                </p>
-                            </div>
-                        </div>
-                        <div class="lic-features">
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>Autoclave &amp; Sterile
-                                    Safe</span></div>
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>CE &amp; ISO 13485
-                                    Support</span></div>
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>Chemical Resistant</span>
-                            </div>
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>Ultra-Legible
-                                    Typography</span></div>
-                        </div>
-                        <a href="#contact" class="lic-cta healthcare-cta"><i class="fas fa-file-alt"></i> Get Healthcare
-                            Label Quote</a>
-                    </div>
-
-                    <!-- FMCG -->
-                    <div class="label-industry-card fmcg-card">
-                        <div class="lic-top">
-                            <div class="lic-mockup fmcg-mock">
-                                <div class="lm-strip fmcg-strip"></div>
-                                <div class="lm-brand" style="color:#92400e">HomeGoods Co.</div>
-                                <div class="lm-product" style="color:#b45309">Detergent Powder</div>
-                                <div class="lm-row"><span style="color:#92400e">Net Wt: 1 KG</span><span
-                                        style="color:#92400e">Economy</span></div>
-                                <div class="lm-row"><span style="color:#6b7280">Fresh Scent</span><span
-                                        style="color:#6b7280">Bio-formula</span></div>
-                                <div class="lm-barcode" style="color:#92400e">||||||||| |||||||</div>
-                                <div class="lm-rx" style="background:#f97316; color:white">FMCG ✓</div>
-                            </div>
-                            <div class="lic-header-info">
-                                <div class="lic-icon fmcg-icon"><i class="fas fa-shopping-basket"></i></div>
-                                <h4>FMCG Labels</h4>
-                                <p>Bold, eye-catching labels for detergents, personal care, food products &amp; consumer
-                                    goods</p>
-                            </div>
-                        </div>
-                        <div class="lic-features">
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>Vibrant CMYK / Pantone</span>
-                            </div>
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>Scratch &amp; Smudge
-                                    Proof</span></div>
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>High-Volume Production</span>
-                            </div>
-                            <div class="lic-feat"><i class="fas fa-check-circle"></i><span>Roll or Sheet Format</span>
-                            </div>
-                        </div>
-                        <a href="#contact" class="lic-cta fmcg-cta"><i class="fas fa-file-alt"></i> Get FMCG Label
-                            Quote</a>
-                    </div>
-
                 </div>
 
-                <!-- Print technology strip -->
-                <div class="label-tech-strip animate-fade-up delay-2">
-                    <span class="lts-title">Printing Technologies:</span>
-                    <div class="lts-items">
-                        <span><i class="fas fa-print"></i> Digital Printing</span>
-                        <span><i class="fas fa-cogs"></i> Offset Lithography</span>
-                        <span><i class="fas fa-wave-square"></i> Flexographic</span>
-                        <span><i class="fas fa-magic"></i> UV Coating &amp; Lamination</span>
-                        <span><i class="fas fa-stamp"></i> Hot Stamping</span>
+                <!-- Flexo Machine Capabilities -->
+                <div class="flexo-capabilities animate-fade-up delay-2">
+                    <div class="fc-left">
+                        <h4><i class="fas fa-microchip"></i> Our Flexo Machine Capabilities</h4>
+                        <p>Engineered for precision, speed, and consistency — our flexographic printing machine handles every label challenge with ease.</p>
+                        <div class="fc-specs">
+                            <div class="fc-spec">
+                                <div class="fc-spec-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                <div>
+                                    <strong>High-Speed Output</strong>
+                                    <span>Up to 150 metres/min print speed</span>
+                                </div>
+                            </div>
+                            <div class="fc-spec">
+                                <div class="fc-spec-icon"><i class="fas fa-palette"></i></div>
+                                <div>
+                                    <strong>6-Color Printing</strong>
+                                    <span>CMYK + 2 Pantone spot colors in one pass</span>
+                                </div>
+                            </div>
+                            <div class="fc-spec">
+                                <div class="fc-spec-icon"><i class="fas fa-ruler-horizontal"></i></div>
+                                <div>
+                                    <strong>Width Range</strong>
+                                    <span>20mm to 330mm label width</span>
+                                </div>
+                            </div>
+                            <div class="fc-spec">
+                                <div class="fc-spec-icon"><i class="fas fa-layer-group"></i></div>
+                                <div>
+                                    <strong>Material Versatility</strong>
+                                    <span>Paper, PP, PE, PET, foil &amp; specialty substrates</span>
+                                </div>
+                            </div>
+                            <div class="fc-spec">
+                                <div class="fc-spec-icon"><i class="fas fa-magic"></i></div>
+                                <div>
+                                    <strong>Finishing Options</strong>
+                                    <span>UV coating, lamination, hot stamping, die-cutting</span>
+                                </div>
+                            </div>
+                            <div class="fc-spec">
+                                <div class="fc-spec-icon"><i class="fas fa-boxes"></i></div>
+                                <div>
+                                    <strong>Bulk Capacity</strong>
+                                    <span>Minimum order: 5,000 labels | No upper limit</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <div class="fc-right">
+                        <div class="fc-process">
+                            <h5><i class="fas fa-route"></i> Our Print Process</h5>
+                            <div class="fcp-steps">
+                                <div class="fcp-step">
+                                    <div class="fcp-num">01</div>
+                                    <div class="fcp-info"><strong>Design &amp; Artwork</strong><span>You share design files — we pre-press and proof for accuracy</span></div>
+                                </div>
+                                <div class="fcp-step">
+                                    <div class="fcp-num">02</div>
+                                    <div class="fcp-info"><strong>Plate Making</strong><span>Precision photopolymer plates created for each color station</span></div>
+                                </div>
+                                <div class="fcp-step">
+                                    <div class="fcp-num">03</div>
+                                    <div class="fcp-info"><strong>Flexo Printing</strong><span>High-speed multi-color print run on selected substrate</span></div>
+                                </div>
+                                <div class="fcp-step">
+                                    <div class="fcp-num">04</div>
+                                    <div class="fcp-info"><strong>Finishing &amp; Die-Cut</strong><span>UV coating, lamination, die-cutting &amp; slitting to size</span></div>
+                                </div>
+                                <div class="fcp-step">
+                                    <div class="fcp-num">05</div>
+                                    <div class="fcp-info"><strong>QC &amp; Dispatch</strong><span>100% inspection before packing and fast dispatch</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Banner -->
+                <div class="flexo-cta-banner animate-fade-up delay-3">
+                    <div class="fcb-content">
+                        <i class="fas fa-print fcb-icon"></i>
+                        <div>
+                            <h4>Ready to Print Your Labels?</h4>
+                            <p>Share your label requirements and get a free sample &amp; quote within 24 hours.</p>
+                        </div>
+                    </div>
+                    <a href="#contact" class="btn btn-primary fcb-btn"><i class="fas fa-file-alt"></i> Get Free Label Quote</a>
                 </div>
 
             </div>
@@ -1119,7 +1193,7 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
-    <script src="main.js?v=5"></script>
+    <script src="main.js?v=7"></script>
 </body>
 
 </html>

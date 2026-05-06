@@ -864,6 +864,106 @@ h5 {
     font-size: 0.8rem;
 }
 
+/* The switcher wrapper needs explicit height so absolute children are contained */
+.hero-card-switcher {
+    position: relative;
+    width: 100%;
+    min-height: 420px;  /* enough for card + footer + dots */
+}
+
+/* All cards are always absolute — no layout reflow on switch */
+.hcs-card {
+    width: 100%;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    transition: opacity 0.55s ease, transform 0.55s ease;
+    transform: translateY(10px) scale(0.98);
+    will-change: opacity, transform;
+}
+
+/* Active card: fully visible, interactive, sits on top */
+.hcs-card.hcs-active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+    z-index: 2;
+}
+
+/* Exiting card stays in place but fades slightly faster */
+.hcs-card.hcs-exit {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Switcher Dots Container */
+.hcs-dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+/* Individual Dot */
+.hcs-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+/* Hover and Active states for dots */
+.hcs-dot:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.hcs-dot.hcs-dot--active {
+    background: var(--blue-400);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.2);
+}
+
+/* Label badge variant — green tinted */
+.hlc-badge--label {
+    background: rgba(52, 211, 153, 0.20);
+    border-color: rgba(52, 211, 153, 0.35);
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.hlc-badge--label i {
+    color: #34d399;
+}
+
+/* Indicator dots */
+.hcs-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.hcs-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.30);
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.hcs-dot--active {
+    background: #93c5fd;
+    transform: scale(1.25);
+}
+
+
 /* ── Hero image fallback (gradient) ── */
 .hero-bg:has(.hero-img[src="assets/hero_packaging.png"]:not([complete])) {
     background: linear-gradient(135deg, #1e3a8a, #1e40af);
@@ -3020,5 +3120,571 @@ h5 {
 
     .mfg-img-wrap.main {
         height: 280px;
+    }
+}
+
+/* ============================================================
+   FLEXO PRINTING LABELS TAB
+   ============================================================ */
+
+/* ── Flexo Hero Banner ── */
+.flexo-hero {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 48px;
+    align-items: center;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1e1b4b 100%);
+    border-radius: var(--radius-lg);
+    padding: 52px 48px;
+    margin-bottom: 48px;
+    position: relative;
+    overflow: hidden;
+}
+
+.flexo-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(99, 102, 241, .18) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.flexo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(99, 102, 241, .25);
+    border: 1px solid rgba(165, 180, 252, .35);
+    color: #a5b4fc;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+}
+
+.flexo-hero-left h3 {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 16px;
+}
+
+.flexo-highlight {
+    background: linear-gradient(135deg, #818cf8, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.flexo-hero-left p {
+    color: rgba(255,255,255,.72);
+    font-size: 1rem;
+    line-height: 1.65;
+    margin-bottom: 32px;
+    max-width: 520px;
+}
+
+.flexo-hero-stats {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: var(--radius-md);
+    padding: 14px 20px;
+    flex-wrap: wrap;
+}
+
+.fhs {
+    text-align: center;
+    padding: 6px 20px;
+}
+
+.fhs-num {
+    display: block;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #a5b4fc;
+    line-height: 1;
+}
+
+.fhs-label {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,.55);
+    margin-top: 3px;
+    display: block;
+    font-weight: 500;
+}
+
+.fhs-div {
+    width: 1px;
+    height: 40px;
+    background: rgba(255,255,255,.15);
+    flex-shrink: 0;
+}
+
+/* ── Flexo Machine Visual ── */
+.flexo-machine-visual {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 340px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fmv-glow {
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(circle, rgba(129, 140, 248, .35) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: .6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.08); }
+}
+
+.fmv-core {
+    position: relative;
+    z-index: 1;
+    background: rgba(255,255,255,.06);
+    border: 2px solid rgba(165,180,252,.3);
+    border-radius: var(--radius-lg);
+    padding: 36px 28px;
+    width: 100%;
+    text-align: center;
+    backdrop-filter: blur(8px);
+}
+
+.fmv-icon {
+    font-size: 3.5rem;
+    color: #818cf8;
+    margin-bottom: 20px;
+    display: block;
+    animation: spinSlow 8s linear infinite;
+}
+
+@keyframes spinSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.fmv-label-roll {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.flr-strip {
+    width: 100%;
+    height: 12px;
+    border-radius: 6px;
+    animation: rollColors 3s linear infinite;
+    background-size: 300% 100% !important;
+}
+
+@keyframes rollColors {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+}
+
+.fmv-label-roll span {
+    font-size: 0.73rem;
+    color: rgba(255,255,255,.55);
+    font-weight: 500;
+}
+
+.fmv-sparks {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.spark {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #c084fc;
+    animation: sparkFloat 2.5s ease-in-out infinite;
+}
+.s1 { top: 15%; left: 10%; animation-delay: 0s; }
+.s2 { top: 60%; right: 8%; animation-delay: .8s; }
+.s3 { bottom: 15%; left: 30%; animation-delay: 1.6s; }
+
+@keyframes sparkFloat {
+    0%, 100% { transform: translateY(0) scale(1); opacity: .7; }
+    50% { transform: translateY(-14px) scale(1.4); opacity: 1; }
+}
+
+/* ── Label Types Grid ── */
+.flexo-label-types {
+    margin-bottom: 48px;
+}
+
+.flt-header {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.flt-header h4 {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--grey-900);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.flt-header h4 i {
+    color: var(--blue-600);
+}
+
+.flt-header p {
+    color: var(--grey-600);
+    font-size: 1rem;
+}
+
+.flt-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.flt-card {
+    background: var(--white);
+    border: 2px solid var(--grey-200);
+    border-radius: var(--radius-md);
+    padding: 28px 24px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.flt-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--flt-accent, var(--blue-700));
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.flt-card:hover {
+    border-color: var(--flt-accent, var(--blue-700));
+    transform: translateY(-5px);
+    box-shadow: 0 12px 36px rgba(0,0,0,.1);
+}
+
+.flt-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--flt-accent, var(--blue-700)) 12%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: var(--flt-accent, var(--blue-700));
+    margin-bottom: 16px;
+}
+
+.flt-card h5 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--grey-900);
+    margin-bottom: 10px;
+}
+
+.flt-card p {
+    font-size: 0.88rem;
+    color: var(--grey-600);
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.flt-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.flt-list li {
+    font-size: 0.83rem;
+    color: var(--grey-700);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.flt-list li i {
+    color: var(--flt-accent, var(--blue-700));
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* ── Flexo Capabilities ── */
+.flexo-capabilities {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    background: var(--grey-50);
+    border-radius: var(--radius-lg);
+    padding: 44px 48px;
+    margin-bottom: 40px;
+    border: 1px solid var(--grey-200);
+}
+
+.fc-left h4 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--grey-900);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fc-left h4 i {
+    color: var(--blue-600);
+}
+
+.fc-left > p {
+    color: var(--grey-600);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.fc-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.fc-spec {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.fc-spec-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--blue-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--blue-700);
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.fc-spec div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.fc-spec strong {
+    font-size: 0.92rem;
+    color: var(--grey-900);
+    font-weight: 700;
+}
+
+.fc-spec span {
+    font-size: 0.83rem;
+    color: var(--grey-500);
+}
+
+/* ── Print Process ── */
+.fc-process {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 32px;
+    border: 1px solid var(--grey-200);
+    height: 100%;
+}
+
+.fc-process h5 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--grey-900);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fc-process h5 i {
+    color: var(--blue-600);
+}
+
+.fcp-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.fcp-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding-bottom: 20px;
+    margin-bottom: 4px;
+    position: relative;
+}
+
+.fcp-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 40px;
+    bottom: 0;
+    width: 2px;
+    background: var(--blue-100);
+}
+
+.fcp-num {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--blue-700);
+    color: white;
+    font-size: 0.78rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.fcp-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-top: 6px;
+}
+
+.fcp-info strong {
+    font-size: 0.9rem;
+    color: var(--grey-900);
+    font-weight: 700;
+}
+
+.fcp-info span {
+    font-size: 0.82rem;
+    color: var(--grey-500);
+    line-height: 1.5;
+}
+
+/* ── Flexo CTA Banner ── */
+.flexo-cta-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    background: linear-gradient(135deg, var(--blue-800), var(--blue-600));
+    border-radius: var(--radius-md);
+    padding: 36px 44px;
+    flex-wrap: wrap;
+}
+
+.fcb-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.fcb-icon {
+    font-size: 2.4rem;
+    color: rgba(255,255,255,.7);
+    flex-shrink: 0;
+}
+
+.fcb-content h4 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 6px;
+}
+
+.fcb-content p {
+    color: rgba(255,255,255,.75);
+    font-size: 0.95rem;
+}
+
+.fcb-btn {
+    background: white;
+    color: var(--blue-700);
+    border-color: white;
+    font-size: 0.95rem;
+    padding: 13px 28px;
+    flex-shrink: 0;
+}
+
+.fcb-btn:hover {
+    background: var(--blue-50);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+}
+
+/* ── Responsive: Flexo Section ── */
+@media (max-width: 1024px) {
+    .flt-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .flexo-capabilities {
+        grid-template-columns: 1fr;
+        padding: 32px 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .flexo-hero {
+        grid-template-columns: 1fr;
+        padding: 36px 24px;
+    }
+
+    .flexo-hero-right {
+        display: none;
+    }
+
+    .flt-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .flexo-hero-stats {
+        justify-content: space-around;
+    }
+
+    .flexo-cta-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 28px 24px;
+    }
+
+    .fcb-btn {
+        width: 100%;
+        justify-content: center;
     }
 }
