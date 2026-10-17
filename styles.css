@@ -516,7 +516,16 @@ h5 {
     border-radius: var(--radius-sm);
 }
 
+.mobile-menu nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
 .mobile-link {
+    display: block;
+    width: 100%;
+    text-align: center;
     font-size: 1.5rem;
     font-weight: 700;
     color: white;
